@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Client/MainWindow.axaml" value="Client/Client.csproj" />
+        <entry key="TopShop.Client/MainWindow.axaml" value="TopShop.Client/TopShop.Client.csproj" />
+        <entry key="TopShop/MainWindow.axaml" value="TopShop/TopShop.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
