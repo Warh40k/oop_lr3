@@ -1,11 +1,11 @@
-namespace DAL;
+namespace BLL.Interfaces;
 
-public interface IDataMapper<T>
+public interface IRepository<T>
 {
     IEnumerable<T> GetAll();
     T GetById(int id);
-    void Save(T entity);
-    void Update(T entity);
+    void Add(T entity);
     void Delete(T entity);
+    void Update(T entity);
     void Insert(T entity);
 }
