@@ -2,7 +2,7 @@ using Npgsql;
 
 namespace DAL;
 
-public class DbConnection
+public static class DbConnection
 {
     private static NpgsqlConnection? _connection;
 
