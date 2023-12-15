@@ -1,6 +1,7 @@
 ﻿using System;
 using Avalonia;
-using DAL.Entities.Good;
+using BLL.Entities;
+using BLL.Repositories;
 using DAL.Mappers.Database;
 using DTOs;
 
@@ -14,14 +15,13 @@ internal class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        var map = new GoodDbDataMapper();
-        var good = new GoodDto();
-        good.Name = "testovavava";
-        good.Id = map.Save(good);
-        good.Name = "testovichcsd";
-        map.Update(good);
-        var goods = map.GetAll();
-        var goodgod = map.GetById(3);
+        var repa = new GoodRepository(new GoodDbDataMapper());
+        var good = new Good
+        {
+            Name = "abba"
+        };
+        repa.Save(good);
+        var goods = repa.GetAll();
         //BuildAvaloniaApp()
         //.StartWithClassicDesktopLifetime(args);
     }

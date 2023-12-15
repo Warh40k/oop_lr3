@@ -14,7 +14,7 @@ public class ShopRepository : IRepository<DAL.Entities.Shop.Shop>
         throw new NotImplementedException();
     }
 
-    public void Add(DAL.Entities.Shop.Shop entity)
+    public void Save(DAL.Entities.Shop.Shop entity)
     {
         throw new NotImplementedException();
     }

@@ -40,6 +40,25 @@ public class ShopDbDataMapper : IDataMapper<ShopDto>
         
         return shops;
     }
+    
+    public void Update(ShopDto entity)
+    {
+        var shop = FromDto(entity);
+        var con = DbConnection.GetConnection();
+        con.Open();
+        int num = 0;
+        const string insertQuery = $"UPDATE {TableName} SET good_name = @name WHERE good_id = @id";
+        var insertCmd = new NpgsqlCommand(insertQuery, con);
+        
+        insertCmd.Parameters.AddWithValue("@name", shop.Name);
+        insertCmd.Parameters.AddWithValue("@id", shop.Id);
+
+        num = insertCmd.ExecuteNonQuery();
+        
+        con.Close();
+        
+        Console.WriteLine($"Обновлено {num} товаров");
+    }
 
     public ShopDto? GetById(int id)
     {
@@ -110,21 +129,32 @@ public class ShopDbDataMapper : IDataMapper<ShopDto>
         var shop = FromDto(entity);
         var con = DbConnection.GetConnection();
         con.Open();
-        const string selectQuery = $"SELECT * FROM {TableName} WHERE shopname = @name";
-        const string insertQuery = $"INSERT INTO {TableName}(shopname,address) values(@name,@address) RETURNING id";
+        const string selectQuery = $"SELECT * FROM {TableName} WHERE id = @id";
         var selectCmd = new NpgsqlCommand(selectQuery, con);
-        var insertCmd = new NpgsqlCommand(insertQuery, con);
-        selectCmd.Parameters.AddWithValue("@name", shop.Name);
         
-        insertCmd.Parameters.AddWithValue("@name", shop.Name);
-        insertCmd.Parameters.AddWithValue("@address", shop.Address);
-        int num = 0;
+        selectCmd.Parameters.AddWithValue("@id", shop.Id);
+       
         bool isExist = selectCmd.ExecuteScalar() != null;
         if (!isExist)
+        {
+            const string insertQuery = $"INSERT INTO {TableName}(shopname,address) values(@name,@address) RETURNING id";
+            var insertCmd = new NpgsqlCommand(insertQuery, con);
+            insertCmd.Parameters.AddWithValue("@name", shop.Name);
+            insertCmd.Parameters.AddWithValue("@address", shop.Address);
             shop.Id = insertCmd.ExecuteScalar() as int?;
+            Console.WriteLine($"Товар вставлен под id {shop.Id}");
+        }
+        else
+        {
+            const string updateQuery = $"UPDATE {TableName} SET shopname = @name, address = @address WHERE id = @id";
+            var updateCmd = new NpgsqlCommand(updateQuery, con);
+            updateCmd.Parameters.AddWithValue("@name", shop.Name);
+            updateCmd.Parameters.AddWithValue("@address", shop.Address);
+            updateCmd.ExecuteNonQuery();
+            Console.WriteLine($"Товар обновлен под id {shop.Id}");
+        }
         con.Close();
         
-        Console.WriteLine($"Записан {shop.Id} товаров");
         return shop.Id;
     }
 }

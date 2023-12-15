@@ -5,7 +5,7 @@ using Npgsql;
 
 namespace DAL.Mappers.Database;
 
-public class ShopGoodsDataMapper : IDataMapper<ShopGoodDto>
+public class ShopGoodsDbDataMapper : IDataMapper<ShopGoodDto>
 {
     private const string TableName = "goods-shops";
     
@@ -44,6 +44,31 @@ public class ShopGoodsDataMapper : IDataMapper<ShopGoodDto>
         con.Close();
         
         return shopgoods;
+    }
+    
+    public void Update(ShopGoodDto entity)
+    {
+        var shopgood = FromDto(entity);
+        var con = DbConnection.GetConnection();
+        con.Open();
+        int num = 0;
+        const string insertQuery = $"UPDATE goods-shops SET id_good = @good, " +
+                                   $"id_shop = @shop, " +
+                                   $"price = @price, " +
+                                   $"in_stock = @in_stock " +
+                                   $"WHERE id = @id";
+        var insertCmd = new NpgsqlCommand(insertQuery, con);
+        
+        insertCmd.Parameters.AddWithValue("@good", shopgood.GoodId);
+        insertCmd.Parameters.AddWithValue("@id_shop", shopgood.ShopId);
+        insertCmd.Parameters.AddWithValue("@price", shopgood.Price);
+        insertCmd.Parameters.AddWithValue("@in_stock", shopgood.InStock);
+
+        num = insertCmd.ExecuteNonQuery();
+        
+        con.Close();
+        
+        Console.WriteLine($"Обновлено {num} товаров");
     }
 
     public ShopGoodDto? GetById(int id)
@@ -87,22 +112,44 @@ public class ShopGoodsDataMapper : IDataMapper<ShopGoodDto>
         ShopGood shopgood = FromDto(entity);
         var con = DbConnection.GetConnection();
         con.Open();
-        const string selectQuery = $"SELECT * FROM {TableName} WHERE shopname = @name";
-        const string insertQuery = $"INSERT INTO {TableName}(id_good,id_shop,price,in_stock) values(@idGood,@idShop,@price,@in_stock) RETURNING id";
+        const string selectQuery = $"SELECT * FROM {TableName} WHERE id = @id";
         var selectCmd = new NpgsqlCommand(selectQuery, con);
-        var insertCmd = new NpgsqlCommand(insertQuery, con);
-        selectCmd.Parameters.AddWithValue("@idGood", shopgood.GoodId);
+        selectCmd.Parameters.AddWithValue("@id", shopgood.Id);
         
-        insertCmd.Parameters.AddWithValue("@idShop", shopgood.ShopId);
-        insertCmd.Parameters.AddWithValue("@price", shopgood.Price);
-        insertCmd.Parameters.AddWithValue("@in_stock", shopgood.InStock);
         int num = 0;
         bool isExist = selectCmd.ExecuteScalar() != null;
         if (!isExist)
+        {
+            const string insertQuery = $"INSERT INTO {TableName}(id_good,id_shop,price,in_stock) values(@idGood,@idShop,@price,@in_stock) RETURNING id";
+            var insertCmd = new NpgsqlCommand(insertQuery, con);
+
+            insertCmd.Parameters.AddWithValue("@idShop", shopgood.ShopId);
+            insertCmd.Parameters.AddWithValue("@idGood", shopgood.GoodId);
+            insertCmd.Parameters.AddWithValue("@price", shopgood.Price);
+            insertCmd.Parameters.AddWithValue("@in_stock", shopgood.InStock);
+            
             shopgood.Id = insertCmd.ExecuteScalar() as int?;
+            Console.WriteLine($"Создана связь под id {shopgood.Id}");
+        }
+        else
+        {
+            const string insertQuery = $"UPDATE goods-shops SET id_good = @good, " +
+                                       $"id_shop = @shop, " +
+                                       $"price = @price, " +
+                                       $"in_stock = @in_stock " +
+                                       $"WHERE id = @id";
+            var insertCmd = new NpgsqlCommand(insertQuery, con);
+        
+            insertCmd.Parameters.AddWithValue("@good", shopgood.GoodId);
+            insertCmd.Parameters.AddWithValue("@id_shop", shopgood.ShopId);
+            insertCmd.Parameters.AddWithValue("@price", shopgood.Price);
+            insertCmd.Parameters.AddWithValue("@in_stock", shopgood.InStock);
+
+            insertCmd.ExecuteNonQuery();
+            Console.WriteLine($"Обновлена связь под id {shopgood.Id}");
+        }
         con.Close();
         
-        Console.WriteLine($"Записан {shopgood.Id} товаров");
         return shopgood.Id;
     }
 

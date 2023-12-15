@@ -23,6 +23,11 @@ public class GoodCsvDataMapper : IDataMapper<GoodDto>
         throw new NotImplementedException();
     }
 
+    public void Update(GoodDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Delete(GoodDto entity)
     {
         throw new NotImplementedException();

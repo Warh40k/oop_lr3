@@ -23,6 +23,11 @@ public class ShopCsvDataMapper : IDataMapper<ShopDto>
         throw new NotImplementedException();
     }
 
+    public void Update(ShopDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Delete(ShopDto entity)
     {
         throw new NotImplementedException();
