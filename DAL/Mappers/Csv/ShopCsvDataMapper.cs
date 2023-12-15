@@ -1,8 +1,9 @@
-using BLL.Shop;
+using DAL.Entities.Shop;
+using DAL.Interfaces;
 
-namespace DAL.Database;
+namespace DAL.Mappers.Csv;
 
-public class ShopDbDataMapper : IDataMapper<Shop>
+public class ShopCsvDataMapper : IDataMapper<Shop>
 {
     public IEnumerable<Shop> GetAll()
     {
@@ -19,17 +20,7 @@ public class ShopDbDataMapper : IDataMapper<Shop>
         throw new NotImplementedException();
     }
 
-    public void Update(Shop entity)
-    {
-        throw new NotImplementedException();
-    }
-
     public void Delete(Shop entity)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Insert(Shop entity)
     {
         throw new NotImplementedException();
     }

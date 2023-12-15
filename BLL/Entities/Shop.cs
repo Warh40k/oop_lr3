@@ -1,4 +1,4 @@
-namespace BLL.Shop;
+namespace BLL.Entities;
 
 public class Shop
 {

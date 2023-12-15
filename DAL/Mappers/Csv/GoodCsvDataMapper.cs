@@ -1,8 +1,9 @@
-using BLL.Good;
+using DAL.Entities.Good;
+using DAL.Interfaces;
 
-namespace DAL.Database;
+namespace DAL.Mappers.Csv;
 
-public class GoodDbDataMapper : IDataMapper<Good>
+public class GoodCsvDataMapper : IDataMapper<Good>
 {
     public IEnumerable<Good> GetAll()
     {
@@ -19,17 +20,7 @@ public class GoodDbDataMapper : IDataMapper<Good>
         throw new NotImplementedException();
     }
 
-    public void Update(Good entity)
-    {
-        throw new NotImplementedException();
-    }
-
     public void Delete(Good entity)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Insert(Good entity)
     {
         throw new NotImplementedException();
     }
