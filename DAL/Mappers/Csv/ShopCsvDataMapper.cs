@@ -1,26 +1,39 @@
+using System.Data.Common;
 using DAL.Entities.Shop;
 using DAL.Interfaces;
+using DTOs;
+using Npgsql;
 
 namespace DAL.Mappers.Csv;
 
-public class ShopCsvDataMapper : IDataMapper<Shop>
+public class ShopCsvDataMapper : IDataMapper<ShopDto>
 {
-    public IEnumerable<Shop> GetAll()
+    public IEnumerable<ShopDto> GetAll(string statement="")
     {
         throw new NotImplementedException();
     }
 
-    public Shop GetById(int id)
+    public ShopDto GetById(int id)
     {
         throw new NotImplementedException();
     }
 
-    public void Save(Shop entity)
+    public int? Save(ShopDto entity)
     {
         throw new NotImplementedException();
     }
 
-    public void Delete(Shop entity)
+    public void Delete(ShopDto entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Shop FromDto(ShopDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ShopDto ToDto(Shop entity)
     {
         throw new NotImplementedException();
     }

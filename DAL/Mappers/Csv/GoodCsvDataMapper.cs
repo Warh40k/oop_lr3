@@ -1,26 +1,39 @@
+using System.Data.Common;
 using DAL.Entities.Good;
 using DAL.Interfaces;
+using DTOs;
+using Npgsql;
 
 namespace DAL.Mappers.Csv;
 
-public class GoodCsvDataMapper : IDataMapper<Good>
+public class GoodCsvDataMapper : IDataMapper<GoodDto>
 {
-    public IEnumerable<Good> GetAll()
+    public IEnumerable<GoodDto> GetAll(string statement="")
     {
         throw new NotImplementedException();
     }
 
-    public Good GetById(int id)
+    public GoodDto GetById(int id)
     {
         throw new NotImplementedException();
     }
 
-    public void Save(Good entity)
+    public int? Save(GoodDto entity)
     {
         throw new NotImplementedException();
     }
 
-    public void Delete(Good entity)
+    public void Delete(GoodDto entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Good FromDto(GoodDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public GoodDto ToDto(Good entity)
     {
         throw new NotImplementedException();
     }

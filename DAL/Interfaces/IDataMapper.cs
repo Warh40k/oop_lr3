@@ -1,9 +1,10 @@
 namespace DAL.Interfaces;
 
-public interface IDataMapper<T>
+public interface IDataMapper<D>
 {
-    IEnumerable<T>? GetAll();
-    T? GetById(int id);
-    void Save(T entity);
-    void Delete(T entity);
+    IEnumerable<D> GetAll(string statement = "");
+    D? GetById(int id);
+    int? Save(D dto);
+    void Delete(D dto);
+
 }

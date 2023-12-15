@@ -1,38 +1,40 @@
+using BLL.Entities;
 using BLL.Interfaces;
 using DAL.Interfaces;
+using DTOs;
 
 namespace BLL.Repositories;
 
-public class GoodRepository : IRepository<DAL.Entities.Good.Good>
+public class GoodRepository : IRepository<Good>
 {
-    private IDataMapper<DAL.Entities.Good.Good> _mapper;
+    private IDataMapper<GoodDto> _mapper;
 
-    public IEnumerable<DAL.Entities.Good.Good> GetAll()
+    public IEnumerable<Good> GetAll()
     {
         throw new NotImplementedException();
     }
 
-    public DAL.Entities.Good.Good GetById(int id)
+    public Good GetById(int id)
     {
         throw new NotImplementedException();
     }
 
-    public void Add(DAL.Entities.Good.Good entity)
+    public void Add(Good entity)
     {
         throw new NotImplementedException();
     }
 
-    public void Delete(DAL.Entities.Good.Good entity)
+    public void Delete(Good entity)
     {
         throw new NotImplementedException();
     }
 
-    public void Update(DAL.Entities.Good.Good entity)
+    public void Update(Good entity)
     {
         throw new NotImplementedException();
     }
 
-    public void Insert(DAL.Entities.Good.Good entity)
+    public void Insert(Good entity)
     {
         throw new NotImplementedException();
     }

@@ -1,16 +1,18 @@
 using DAL.Interfaces;
 using Npgsql;
 using DAL.Entities.Shop;
+using DTOs;
 
 namespace DAL.Mappers.Database;
 
-public class ShopDbDataMapper : IDataMapper<Shop>
+public class ShopDbDataMapper : IDataMapper<ShopDto>
 {
-    public IEnumerable<Shop> GetAll()
+    private const string TableName = "shops";
+    public IEnumerable<ShopDto> GetAll(string statement="")
     {
-        List<Shop> shops = new List<Shop>();
+        List<ShopDto> shops = new List<ShopDto>();
         var con = DbConnection.GetConnection();
-        const string insertQuery = "SELECT * FROM shops";
+        string insertQuery = $"SELECT * FROM {TableName} {statement}";
         var insertCmd = new NpgsqlCommand(insertQuery, con);
 
         con.Open();
@@ -30,22 +32,20 @@ public class ShopDbDataMapper : IDataMapper<Shop>
                         Name = reader.GetString(nameIndex),
                         Address = reader.GetString(addressIndex)
                     };
-                    shops.Add(shop);
+                    shops.Add(ToDto(shop));
                 }
             }
-            else
-                return null;
         }
         con.Close();
         
         return shops;
     }
 
-    public Shop GetById(int id)
+    public ShopDto? GetById(int id)
     {
         Shop shop = new Shop();
         var con = DbConnection.GetConnection();
-        const string insertQuery = "SELECT * FROM shops WHERE id = @id";
+        const string insertQuery = $"SELECT * FROM {TableName} WHERE id = @id";
         var insertCmd = new NpgsqlCommand(insertQuery, con);
         insertCmd.Parameters.AddWithValue("@id", id);
 
@@ -67,40 +67,64 @@ public class ShopDbDataMapper : IDataMapper<Shop>
                 return null;
         }
         con.Close();
-        return shop;
+        return ToDto(shop);
     }
 
-    public void Delete(Shop entity)
+    public void Delete(ShopDto entity)
     {
+        var shop = FromDto(entity);
+
         var con = DbConnection.GetConnection();
         con.Open();
-        const string insertQuery = "DELETE FROM shops WHERE id = @id";
+        const string insertQuery = $"DELETE FROM {TableName} WHERE id = @id";
         var insertCmd = new NpgsqlCommand(insertQuery, con);
-        insertCmd.Parameters.AddWithValue("@id", entity.Id);
+        insertCmd.Parameters.AddWithValue("@id", shop.Id);
         int num = insertCmd.ExecuteNonQuery();
         con.Close();
         
         Console.WriteLine($"Удалено {num} товаров");
     }
 
-    public void Save(Shop entity)
+    public Shop FromDto(ShopDto dto)
     {
+        return new Shop
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Address = dto.Address
+        };
+    }
+
+    public ShopDto ToDto(Shop entity)
+    {
+        return new ShopDto
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Address = entity.Address
+        };
+    }
+
+    public int? Save(ShopDto entity)
+    {
+        var shop = FromDto(entity);
         var con = DbConnection.GetConnection();
         con.Open();
-        const string selectQuery = "SELECT * FROM shops WHERE shopname = @name";
-        const string insertQuery = "INSERT INTO shops(shopname,address) values(@name,@address) RETURNING id";
+        const string selectQuery = $"SELECT * FROM {TableName} WHERE shopname = @name";
+        const string insertQuery = $"INSERT INTO {TableName}(shopname,address) values(@name,@address) RETURNING id";
         var selectCmd = new NpgsqlCommand(selectQuery, con);
         var insertCmd = new NpgsqlCommand(insertQuery, con);
-        selectCmd.Parameters.AddWithValue("@name", entity.Name);
+        selectCmd.Parameters.AddWithValue("@name", shop.Name);
         
-        insertCmd.Parameters.AddWithValue("@name", entity.Name);
-        insertCmd.Parameters.AddWithValue("@address", entity.Address);
+        insertCmd.Parameters.AddWithValue("@name", shop.Name);
+        insertCmd.Parameters.AddWithValue("@address", shop.Address);
         int num = 0;
         bool isExist = selectCmd.ExecuteScalar() != null;
         if (!isExist)
-            entity.Id = insertCmd.ExecuteScalar() as int?;
+            shop.Id = insertCmd.ExecuteScalar() as int?;
         con.Close();
         
-        Console.WriteLine($"Записан {entity.Id} товаров");
+        Console.WriteLine($"Записан {shop.Id} товаров");
+        return shop.Id;
     }
 }

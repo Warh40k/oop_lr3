@@ -15,10 +15,10 @@ internal class Program
     public static void Main(string[] args)
     {
         var map = new GoodDbDataMapper();
-        var good = new Good();
-        good.Name = "testovich";
-        map.Save(good);
-        good.Name = "testov";
+        var good = new GoodDto();
+        good.Name = "testovavava";
+        good.Id = map.Save(good);
+        good.Name = "testovichcsd";
         map.Update(good);
         var goods = map.GetAll();
         var goodgod = map.GetById(3);
