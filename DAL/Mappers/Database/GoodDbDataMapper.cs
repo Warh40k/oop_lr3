@@ -44,10 +44,10 @@ public class GoodDbDataMapper : IGoodDataMapper
     {
         var con = DbConnection.GetConnection();
         List<GoodDto> goods = new List<GoodDto>();
-        string query = """
+        string query = $"""
                        SELECT good_id, good_name, price, in_stock
-                       FROM goods
-                       INNER JOIN "goods-shops" as gs ON gs.id_good = goods.good_id
+                       FROM {TableName}
+                       INNER JOIN "goods-shops" as gs ON gs.id_good = {TableName}.good_id
                        WHERE id_shop = @id_shop
                        """;
         var cmd = new NpgsqlCommand(query, con);
@@ -80,7 +80,6 @@ public class GoodDbDataMapper : IGoodDataMapper
     public void AddGoodToShop(int? shopId, GoodDto goodDto)
     {
         var shopGoodMapper = new ShopGoodDbDataMapper();
-        var good = FromDto(goodDto);
 
         var shopgood = new ShopGoodDto
         {
@@ -193,7 +192,9 @@ public class GoodDbDataMapper : IGoodDataMapper
         return new GoodDto
         {
             Id = entity.Id,
-            Name = entity.Name
+            Name = entity.Name,
+            Quantity = entity.Quantity,
+            Price = entity.Price
         };
     }
 
@@ -210,6 +211,7 @@ public class GoodDbDataMapper : IGoodDataMapper
             insertCmd.Parameters.AddWithValue("@name", good.Name);
             good.Id = insertCmd.ExecuteScalar() as int?;
         }
+
         con.Close();
         
         Console.WriteLine($"Записан {good.Id} товаров");

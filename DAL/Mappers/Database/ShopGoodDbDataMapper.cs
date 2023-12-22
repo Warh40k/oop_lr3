@@ -123,8 +123,8 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
         selectCmd.Parameters.AddWithValue("@idGood", shopgood.GoodId);
         
         int num = 0;
-        bool isExist = selectCmd.ExecuteScalar() != null;
-        if (!isExist)
+        shopgood.Id = selectCmd.ExecuteScalar() as int?;
+        if (shopgood.Id == null)
         {
             const string insertQuery = $"INSERT INTO \"{TableName}\" (id_good,id_shop,price,in_stock) values(@idGood,@idShop,@price,@in_stock) RETURNING id";
             var insertCmd = new NpgsqlCommand(insertQuery, con);
@@ -139,21 +139,18 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
         }
         else
         {
-            const string insertQuery =
-                """
-                UPDATE "goods-shops" 
-                SET id_good = @good, 
-                    id_shop = @shop, 
-                    price = @price, 
+            const string updateQuery =
+                $"""
+                UPDATE "{TableName}" 
+                SET price = @price, 
                     in_stock = @in_stock 
                 WHERE id = @id;
                 """;
-            var insertCmd = new NpgsqlCommand(insertQuery, con);
+            var insertCmd = new NpgsqlCommand(updateQuery, con);
         
-            insertCmd.Parameters.AddWithValue("@good", shopgood.GoodId);
-            insertCmd.Parameters.AddWithValue("@shop", shopgood.ShopId);
             insertCmd.Parameters.AddWithValue("@price", shopgood.Price);
             insertCmd.Parameters.AddWithValue("@in_stock", shopgood.InStock);
+            insertCmd.Parameters.AddWithValue("@id", shopgood.Id);
 
             insertCmd.ExecuteNonQuery();
             Console.WriteLine($"Обновлена связь под id {shopgood.Id}");

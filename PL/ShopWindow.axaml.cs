@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -43,7 +44,13 @@ public partial class ShopWindow : Window
     private void AddGoods(object? sender, RoutedEventArgs e)
     {
         var good = GoodsGrid.SelectedItem as Good;
-        //Refresh();
+        if (good != null && !String.IsNullOrEmpty(goodPriceBox.Text) && !String.IsNullOrEmpty(goodPriceBox.Text))
+        {
+            good.Price = Decimal.Parse(goodPriceBox.Text);
+            good.Quantity = Int32.Parse(goodCountBox.Text);
+            _goodRepo.AddToShop(shopContext.Id, good);
+            Refresh();
+        }
     }
 
     private void FindForNRubles(object? sender, RoutedEventArgs e)
