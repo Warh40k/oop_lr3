@@ -1,4 +1,5 @@
 using DAL.Entities.Good;
+using DAL.Entities.Shop;
 using DAL.Entities.ShopGoods;
 using DAL.Interfaces;
 using DTOs;
@@ -105,6 +106,8 @@ public class GoodDbDataMapper : IGoodDataMapper
         shopGoodMapper.Delete(shopGoodDto);
     }
 
+
+
     public GoodDto? GetById(int id)
     {
         Good good = new Good();
@@ -196,6 +199,30 @@ public class GoodDbDataMapper : IGoodDataMapper
             Quantity = entity.Quantity,
             Price = entity.Price
         };
+    }
+    
+    public int FindCheapestShop(GoodDto goodDto)
+    {
+        var good = FromDto(goodDto);
+        var con = DbConnection.GetConnection();
+        const string selectQuery = $"""
+                                    SELECT id_shop FROM {TableName}
+                                    INNER JOIN "goods-shops" as gs ON good_id = id_good
+                                    WHERE good_id = @id
+                                    ORDER BY price ASC
+                                    """;
+        var selectCmd = new NpgsqlCommand(selectQuery, con);
+        selectCmd.Parameters.AddWithValue("@id", goodDto.Id);
+        con.Open();
+        var reader = selectCmd.ExecuteReader();
+        if (reader.HasRows)
+        {
+            reader.Read();
+            return reader.GetInt32(reader.GetOrdinal("id_shop"));
+        }
+        con.Close();
+
+        return -1;
     }
 
     public int? Save(GoodDto entity)

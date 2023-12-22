@@ -1,5 +1,6 @@
 using System.Data.Common;
 using DAL.Entities.Good;
+using DAL.Entities.Shop;
 using DAL.Interfaces;
 using DTOs;
 using Npgsql;
@@ -44,6 +45,16 @@ public class GoodCsvDataMapper : IGoodDataMapper
     }
 
     public void DeleteGoodFromShop(int shopId, GoodDto goodDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public int FindCheapestShop(GoodDto goodDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Shop FindCheapestGood(GoodDto goodDto)
     {
         throw new NotImplementedException();
     }

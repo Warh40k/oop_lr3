@@ -1,3 +1,4 @@
+using DAL.Entities.Shop;
 using DAL.Entities.ShopGoods;
 using DAL.Interfaces;
 using DTOs;
@@ -197,4 +198,6 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
             Price = entity.Price,
         };
     }
+    
+
 }

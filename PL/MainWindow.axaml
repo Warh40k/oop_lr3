@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:e="using:BLL.Entities"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Client.MainWindow"
         Title="PL">
@@ -20,7 +21,15 @@
                     <TextBox Name="ShopAddressBox"></TextBox>
                     <Button Margin="10" Click="CreateShop">Создать магазин</Button>
                     <Button Margin="10" Click="OpenShop">Открыть магазин</Button>
-                    <Button Margin="10">Список товаров по бюджету</Button>
+                    <Label>Выберите товар</Label>
+                    <ComboBox Name="GoodsComboBox">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate DataType="e:Good">
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button Margin="10" Click="FindCheapestShop">Найти самый дешевый магазин</Button>
                     <Button Margin="10">Поиск дешевых товаров</Button>
                 </StackPanel>
             </Grid>

@@ -11,6 +11,7 @@ namespace Client;
 public partial class MainWindow : Window
 {
     private ShopRepository _shopRepo;
+    private GoodRepository _goodRepo;
     private IShopDataMapper _shopMapper;
     private IGoodDataMapper _goodMapper;
     public ObservableCollection<Shop> Shops { get; set; }
@@ -21,8 +22,10 @@ public partial class MainWindow : Window
         _shopMapper = new ShopDbDataMapper();
         _goodMapper = new GoodDbDataMapper();
         _shopRepo = new ShopRepository(_shopMapper);
+        _goodRepo = new GoodRepository(_goodMapper);
         Shops = new ObservableCollection<Shop>(_shopRepo.GetAll());
         ShopsGrid.ItemsSource = Shops;
+        GoodsComboBox.ItemsSource = _goodRepo.GetAll();
     }
     
     private void Refresh()
@@ -55,6 +58,20 @@ public partial class MainWindow : Window
             };
             _shopRepo.Save(shop);
             Refresh();
+        }
+    }
+
+    private void FindCheapestShop(object? sender, RoutedEventArgs e)
+    {
+        var good = GoodsComboBox.SelectedItem as Good;
+        var shopId = _goodRepo.FindCheapestShop(good);
+        foreach (var shop in Shops)
+        {
+            if (shop.Id == shopId)
+            {
+                var mb = new MessageBox("Самый дешевый товар", $"{shop.Name}");
+                mb.ShowDialog(this);
+            }
         }
     }
 }

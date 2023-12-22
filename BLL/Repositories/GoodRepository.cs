@@ -38,8 +38,13 @@ public class GoodRepository : IRepository<Good>
 
         return goods;
     }
+
+    public int FindCheapestShop(Good good)
+    {
+        return _mapper.FindCheapestShop(ToDto(good));
+    } 
     
-    public Good? GetById(int id)
+    public Good GetById(int id)
     {
         return FromDto(_mapper.GetById(id));
     }

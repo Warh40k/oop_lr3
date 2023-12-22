@@ -9,6 +9,7 @@
         <entry key="PL/CreateShop.axaml" value="PL/PL.csproj" />
         <entry key="PL/GoodsWindow.axaml" value="PL/PL.csproj" />
         <entry key="PL/MainWindow.axaml" value="PL/PL.csproj" />
+        <entry key="PL/MessageBox.axaml" value="PL/PL.csproj" />
         <entry key="PL/ShopWindow.axaml" value="PL/PL.csproj" />
         <entry key="TopShop.Client/MainWindow.axaml" value="TopShop.Client/TopShop.Client.csproj" />
         <entry key="TopShop/MainWindow.axaml" value="TopShop/TopShop.csproj" />
