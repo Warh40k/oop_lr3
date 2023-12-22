@@ -6,7 +6,7 @@ using Npgsql;
 
 namespace DAL.Mappers.Csv;
 
-public class GoodCsvDataMapper : IDataMapper<GoodDto>
+public class GoodCsvDataMapper : IGoodDataMapper
 {
     public IEnumerable<GoodDto> GetAll(string statement="")
     {
@@ -29,6 +29,21 @@ public class GoodCsvDataMapper : IDataMapper<GoodDto>
     }
 
     public void Delete(GoodDto entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<GoodDto> GetGoodsFromShop(int? shopId)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void AddGoodToShop(int shopId, GoodDto goodDto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DeleteGoodFromShop(int shopId, GoodDto goodDto)
     {
         throw new NotImplementedException();
     }

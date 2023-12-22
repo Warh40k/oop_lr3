@@ -6,7 +6,7 @@ using Npgsql;
 
 namespace DAL.Mappers.Csv;
 
-public class ShopCsvDataMapper : IDataMapper<ShopDto>
+public class ShopCsvDataMapper : IShopDataMapper
 {
     public IEnumerable<ShopDto> GetAll(string statement="")
     {

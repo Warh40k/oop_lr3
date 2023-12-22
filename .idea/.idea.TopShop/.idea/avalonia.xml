@@ -4,6 +4,11 @@
     <option name="projectPerEditor">
       <map>
         <entry key="Client/MainWindow.axaml" value="Client/Client.csproj" />
+        <entry key="PL/App.axaml" value="PL/PL.csproj" />
+        <entry key="PL/CreateGood.axaml" value="PL/PL.csproj" />
+        <entry key="PL/CreateShop.axaml" value="PL/PL.csproj" />
+        <entry key="PL/GoodsWindow.axaml" value="PL/PL.csproj" />
+        <entry key="PL/MainWindow.axaml" value="PL/PL.csproj" />
         <entry key="TopShop.Client/MainWindow.axaml" value="TopShop.Client/TopShop.Client.csproj" />
         <entry key="TopShop/MainWindow.axaml" value="TopShop/TopShop.csproj" />
       </map>

@@ -1,36 +1,62 @@
+using BLL.Entities;
 using BLL.Interfaces;
+using DAL.Interfaces;
+using DTOs;
 
 namespace BLL.Repositories;
 
-public class ShopRepository : IRepository<DAL.Entities.Shop.Shop>
+public class ShopRepository : IRepository<Shop>
 {
-    public IEnumerable<DAL.Entities.Shop.Shop> GetAll()
+    private IDataMapper<ShopDto> _mapper;
+
+    public ShopRepository(IDataMapper<ShopDto> mapper)
     {
-        throw new NotImplementedException();
+        _mapper = mapper;
+    }
+    public IEnumerable<Shop> GetAll(string statement="")
+    {
+        var dtos = _mapper.GetAll();
+        List<Shop> shops = new List<Shop>();
+
+        foreach (var dto in dtos)
+        {
+            shops.Add(FromDto(dto));
+        }
+
+        return shops;
+    }
+    
+    private Shop? FromDto(ShopDto? dto)
+    {
+        return new Shop
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Address = dto.Address
+        };
     }
 
-    public DAL.Entities.Shop.Shop GetById(int id)
+    private ShopDto ToDto(Shop entity)
     {
-        throw new NotImplementedException();
+        return new ShopDto
+        {
+            Id = entity.Id,
+            Name = entity.Name
+        };
     }
 
-    public void Save(DAL.Entities.Shop.Shop entity)
+    public Shop? GetById(int id)
     {
-        throw new NotImplementedException();
+        return FromDto(_mapper.GetById(id));
     }
 
-    public void Delete(DAL.Entities.Shop.Shop entity)
+    public void Save(Shop entity)
     {
-        throw new NotImplementedException();
+        _mapper.Save(ToDto(entity));
     }
 
-    public void Update(DAL.Entities.Shop.Shop entity)
+    public void Delete(Shop entity)
     {
-        throw new NotImplementedException();
-    }
-
-    public void Insert(DAL.Entities.Shop.Shop entity)
-    {
-        throw new NotImplementedException();
+        _mapper.Delete(ToDto(entity));
     }
 }

@@ -1,11 +1,12 @@
 using DAL.Entities.Good;
+using DAL.Entities.ShopGoods;
 using DAL.Interfaces;
 using DTOs;
 using Npgsql;
 
 namespace DAL.Mappers.Database;
 
-public class GoodDbDataMapper : IDataMapper<GoodDto>
+public class GoodDbDataMapper : IGoodDataMapper
 {
     private const string TableName = "goods";
     public IEnumerable<GoodDto> GetAll(string statement="")
@@ -37,6 +38,69 @@ public class GoodDbDataMapper : IDataMapper<GoodDto>
         con.Close();
         
         return goods;
+    }
+
+    public IEnumerable<GoodDto> GetGoodsFromShop(int? shopId)
+    {
+        var con = DbConnection.GetConnection();
+        List<GoodDto> goods = new List<GoodDto>();
+        string query = """
+                       SELECT good_id, good_name, price, in_stock
+                       FROM goods
+                       INNER JOIN "goods-shops" as gs ON gs.id_shop = @id_shop
+                       """;
+        var cmd = new NpgsqlCommand(query, con);
+        cmd.Parameters.AddWithValue("@id_shop", shopId);
+        var reader = cmd.ExecuteReader();
+
+        if (reader.HasRows)
+        {
+            int idIndex = reader.GetOrdinal("good_id");
+            int nameIndex = reader.GetOrdinal("good_name");
+            int priceIndex = reader.GetOrdinal("price");
+            int inStockIndex = reader.GetOrdinal("in_stock");
+
+            while (reader.Read())
+            {
+                Good good = new Good();
+                good.Id = reader.GetInt32(idIndex);
+                good.Name = reader.GetString(nameIndex);
+                good.Price = reader.GetDecimal(priceIndex);
+                good.Quantity = reader.GetInt32(inStockIndex);
+                goods.Add(ToDto(good));
+            }
+        }
+
+        return goods;
+    }
+
+    public void AddGoodToShop(int shopId, GoodDto goodDto)
+    {
+        var shopGoodMapper = new ShopGoodDbDataMapper();
+        var good = FromDto(goodDto);
+        var shopgood = new ShopGoodDto
+        {
+            GoodId = good.Id,
+            ShopId = shopId,
+            Price = good.Price,
+            InStock = good.Quantity
+        };
+        shopGoodMapper.Save(shopgood);
+        Save(ToDto(good));
+    }
+
+    public void DeleteGoodFromShop(int shopId, GoodDto goodDto)
+    {
+        var shopGoodMapper = new ShopGoodDbDataMapper();
+        var shopGoodDto = new ShopGoodDto
+        {
+            GoodId = goodDto.Id,
+            ShopId = shopId,
+            Price = goodDto.Price,
+            InStock = goodDto.Quantity
+        };
+        
+        shopGoodMapper.Delete(shopGoodDto);
     }
 
     public GoodDto? GetById(int id)

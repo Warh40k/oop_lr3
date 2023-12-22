@@ -5,7 +5,7 @@ using Npgsql;
 
 namespace DAL.Mappers.Database;
 
-public class ShopGoodsDbDataMapper : IDataMapper<ShopGoodDto>
+public class ShopGoodDbDataMapper : IShopGoodDataMapper
 {
     private const string TableName = "goods-shops";
     
@@ -45,7 +45,12 @@ public class ShopGoodsDbDataMapper : IDataMapper<ShopGoodDto>
         
         return shopgoods;
     }
-    
+
+    public IEnumerable<ShopGoodDto> GetGoodsFromShop(ShopGoodDto Shop)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Update(ShopGoodDto entity)
     {
         var shopgood = FromDto(entity);

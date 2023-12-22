@@ -3,7 +3,6 @@ using Avalonia;
 using BLL.Entities;
 using BLL.Repositories;
 using DAL.Mappers.Database;
-using DTOs;
 
 namespace Client;
 
@@ -15,15 +14,8 @@ internal class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        var repa = new GoodRepository(new GoodDbDataMapper());
-        var good = new Good
-        {
-            Name = "abba"
-        };
-        repa.Save(good);
-        var goods = repa.GetAll();
-        //BuildAvaloniaApp()
-        //.StartWithClassicDesktopLifetime(args);
+        BuildAvaloniaApp()
+            .StartWithClassicDesktopLifetime(args);
     }
 
     // Avalonia configuration, don't remove; also used by visual designer.

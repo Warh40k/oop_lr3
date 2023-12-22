@@ -1,11 +1,14 @@
+using DTOs;
+
 namespace DAL.Interfaces;
 
-public interface IDataMapper<D>
+public interface IDataMapper<T>
 {
-    IEnumerable<D> GetAll(string statement = "");
-    D? GetById(int id);
-    int? Save(D dto);
-    void Update(D dto);
-    void Delete(D dto);
+    IEnumerable<T> GetAll(string statement = "");
+    T? GetById(int id);
+    int? Save(T dto);
+    void Update(T dto);
+    void Delete(T dto);
+    
 
 }

@@ -5,7 +5,7 @@ using DTOs;
 
 namespace DAL.Mappers.Database;
 
-public class ShopDbDataMapper : IDataMapper<ShopDto>
+public class ShopDbDataMapper : IShopDataMapper
 {
     private const string TableName = "shops";
     public IEnumerable<ShopDto> GetAll(string statement="")
@@ -40,7 +40,12 @@ public class ShopDbDataMapper : IDataMapper<ShopDto>
         
         return shops;
     }
-    
+
+    public IEnumerable<ShopDto> GetGoodsFromShop(int shopId)
+    {
+        throw new NotImplementedException();
+    }
+
     public void Update(ShopDto entity)
     {
         var shop = FromDto(entity);
