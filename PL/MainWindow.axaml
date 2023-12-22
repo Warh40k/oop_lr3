@@ -14,7 +14,11 @@
                 </DataGrid>
                 <StackPanel Grid.Column="1" Margin="10" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Button Margin="10" Click="OpenGoods">Все товары</Button>
-                    <Button Margin="10">Создать магазин</Button>
+                    <Label>Введите название магазина</Label>
+                    <TextBox Name="ShopNameBox"></TextBox>
+                    <Label>Введите адрес магазина</Label>
+                    <TextBox Name="ShopAddressBox"></TextBox>
+                    <Button Margin="10" Click="CreateShop">Создать магазин</Button>
                     <Button Margin="10" Click="OpenShop">Открыть магазин</Button>
                     <Button Margin="10">Список товаров по бюджету</Button>
                     <Button Margin="10">Поиск дешевых товаров</Button>

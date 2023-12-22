@@ -139,15 +139,19 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
         }
         else
         {
-            const string insertQuery = $"UPDATE goods-shops SET id_good = @good, " +
-                                       $"id_shop = @shop, " +
-                                       $"price = @price, " +
-                                       $"in_stock = @in_stock " +
-                                       $"WHERE id = @id";
+            const string insertQuery =
+                """
+                UPDATE "goods-shops" 
+                SET id_good = @good, 
+                    id_shop = @shop, 
+                    price = @price, 
+                    in_stock = @in_stock 
+                WHERE id = @id;
+                """;
             var insertCmd = new NpgsqlCommand(insertQuery, con);
         
             insertCmd.Parameters.AddWithValue("@good", shopgood.GoodId);
-            insertCmd.Parameters.AddWithValue("@id_shop", shopgood.ShopId);
+            insertCmd.Parameters.AddWithValue("@shop", shopgood.ShopId);
             insertCmd.Parameters.AddWithValue("@price", shopgood.Price);
             insertCmd.Parameters.AddWithValue("@in_stock", shopgood.InStock);
 

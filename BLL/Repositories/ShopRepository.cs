@@ -41,7 +41,8 @@ public class ShopRepository : IRepository<Shop>
         return new ShopDto
         {
             Id = entity.Id,
-            Name = entity.Name
+            Name = entity.Name,
+            Address = entity.Address
         };
     }
 

@@ -5,7 +5,6 @@ using BLL.Entities;
 using BLL.Repositories;
 using DAL.Interfaces;
 using DAL.Mappers.Database;
-using DTOs;
 
 namespace Client;
 
@@ -43,5 +42,19 @@ public partial class MainWindow : Window
     {
         var goodWindow = new GoodsWindow(_goodMapper);
         goodWindow.ShowDialog(this);
+    }
+
+    private void CreateShop(object? sender, RoutedEventArgs e)
+    {
+        if (ShopNameBox.Text.Trim() != "" && ShopAddressBox.Text.Trim() != "")
+        {
+            var shop = new Shop()
+            {
+                Name = ShopNameBox.Text,
+                Address = ShopAddressBox.Text
+            };
+            _shopRepo.Save(shop);
+            Refresh();
+        }
     }
 }
