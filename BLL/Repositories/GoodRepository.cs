@@ -1,4 +1,3 @@
-using System.Xml;
 using BLL.Entities;
 using BLL.Interfaces;
 using DAL.Interfaces;
@@ -9,12 +8,10 @@ namespace BLL.Repositories;
 public class GoodRepository : IRepository<Good>
 {
     private IGoodDataMapper _mapper;
-    private IShopGoodDataMapper _shopGoodMap;
 
-    public GoodRepository(IGoodDataMapper mapper, IShopGoodDataMapper shopGoodMap)
+    public GoodRepository(IGoodDataMapper mapper)
     {
         _mapper = mapper;
-        _shopGoodMap = shopGoodMap;
     }
 
     public IEnumerable<Good> GetAll(string statement = "")
@@ -47,7 +44,7 @@ public class GoodRepository : IRepository<Good>
         return FromDto(_mapper.GetById(id));
     }
 
-    private Good? FromDto(GoodDto? dto)
+    private Good FromDto(GoodDto? dto)
     {
         return new Good
         {
@@ -84,8 +81,8 @@ public class GoodRepository : IRepository<Good>
         _mapper.DeleteGoodFromShop(shopId, ToDto(entity));
     }
 
-    public void AddToShop(int shopId, Good entity)
+    public void AddToShop(int? shopId, Good good)
     {
-        _mapper.AddGoodToShop(shopId, ToDto(entity));
+        _mapper.AddGoodToShop(shopId, ToDto(good));
     }
 }

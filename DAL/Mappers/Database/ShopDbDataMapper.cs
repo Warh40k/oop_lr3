@@ -109,7 +109,7 @@ public class ShopDbDataMapper : IShopDataMapper
         Console.WriteLine($"Удалено {num} товаров");
     }
 
-    public Shop FromDto(ShopDto dto)
+    public static Shop FromDto(ShopDto dto)
     {
         return new Shop
         {
@@ -119,7 +119,7 @@ public class ShopDbDataMapper : IShopDataMapper
         };
     }
 
-    public ShopDto ToDto(Shop entity)
+    public static ShopDto ToDto(Shop entity)
     {
         return new ShopDto
         {

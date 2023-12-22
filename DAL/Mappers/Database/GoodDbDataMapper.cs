@@ -47,10 +47,12 @@ public class GoodDbDataMapper : IGoodDataMapper
         string query = """
                        SELECT good_id, good_name, price, in_stock
                        FROM goods
-                       INNER JOIN "goods-shops" as gs ON gs.id_shop = @id_shop
+                       INNER JOIN "goods-shops" as gs ON gs.id_good = goods.good_id
+                       WHERE id_shop = @id_shop
                        """;
         var cmd = new NpgsqlCommand(query, con);
         cmd.Parameters.AddWithValue("@id_shop", shopId);
+        con.Open();
         var reader = cmd.ExecuteReader();
 
         if (reader.HasRows)
@@ -70,23 +72,24 @@ public class GoodDbDataMapper : IGoodDataMapper
                 goods.Add(ToDto(good));
             }
         }
+        con.Close();
 
         return goods;
     }
 
-    public void AddGoodToShop(int shopId, GoodDto goodDto)
+    public void AddGoodToShop(int? shopId, GoodDto goodDto)
     {
         var shopGoodMapper = new ShopGoodDbDataMapper();
         var good = FromDto(goodDto);
+
         var shopgood = new ShopGoodDto
         {
-            GoodId = good.Id,
+            GoodId = goodDto.Id,
             ShopId = shopId,
-            Price = good.Price,
-            InStock = good.Quantity
+            Price = goodDto.Price,
+            InStock = goodDto.Quantity
         };
         shopGoodMapper.Save(shopgood);
-        Save(ToDto(good));
     }
 
     public void DeleteGoodFromShop(int shopId, GoodDto goodDto)
@@ -176,7 +179,7 @@ public class GoodDbDataMapper : IGoodDataMapper
         Console.WriteLine($"Удалено {num} товаров");
     }
 
-    public Good FromDto(GoodDto dto)
+    public static Good FromDto(GoodDto dto)
     {
         return new Good
         {
@@ -185,7 +188,7 @@ public class GoodDbDataMapper : IGoodDataMapper
         };
     }
 
-    public GoodDto ToDto(Good entity)
+    public static GoodDto ToDto(Good entity)
     {
         return new GoodDto
         {

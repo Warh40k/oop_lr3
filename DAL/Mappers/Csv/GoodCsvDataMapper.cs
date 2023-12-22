@@ -38,7 +38,7 @@ public class GoodCsvDataMapper : IGoodDataMapper
         throw new NotImplementedException();
     }
 
-    public void AddGoodToShop(int shopId, GoodDto goodDto)
+    public void AddGoodToShop(int? shopId, GoodDto goodDto)
     {
         throw new NotImplementedException();
     }

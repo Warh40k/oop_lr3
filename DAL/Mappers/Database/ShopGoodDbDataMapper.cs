@@ -13,7 +13,7 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
     {
         List<ShopGoodDto> shopgoods = new List<ShopGoodDto>();
         var con = DbConnection.GetConnection();
-        const string insertQuery = $"SELECT * FROM {TableName}";
+        const string insertQuery = $"SELECT * FROM \"{TableName}\"";
         var insertCmd = new NpgsqlCommand(insertQuery, con);
 
         con.Open();
@@ -80,7 +80,7 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
     {
         ShopGood shopgood;
         var con = DbConnection.GetConnection();
-        const string insertQuery = $"SELECT * FROM {TableName} WHERE id = @id";
+        const string insertQuery = $"SELECT * FROM \"{TableName}\" WHERE id = @id";
         var insertCmd = new NpgsqlCommand(insertQuery, con);
         insertCmd.Parameters.AddWithValue("@id", id);
 
@@ -117,15 +117,16 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
         ShopGood shopgood = FromDto(entity);
         var con = DbConnection.GetConnection();
         con.Open();
-        const string selectQuery = $"SELECT * FROM {TableName} WHERE id = @id";
+        const string selectQuery = $"SELECT * FROM \"{TableName}\" WHERE id_shop = @idShop and id_good = @idGood";
         var selectCmd = new NpgsqlCommand(selectQuery, con);
-        selectCmd.Parameters.AddWithValue("@id", shopgood.Id);
+        selectCmd.Parameters.AddWithValue("@idShop", shopgood.ShopId);
+        selectCmd.Parameters.AddWithValue("@idGood", shopgood.GoodId);
         
         int num = 0;
         bool isExist = selectCmd.ExecuteScalar() != null;
         if (!isExist)
         {
-            const string insertQuery = $"INSERT INTO {TableName}(id_good,id_shop,price,in_stock) values(@idGood,@idShop,@price,@in_stock) RETURNING id";
+            const string insertQuery = $"INSERT INTO \"{TableName}\" (id_good,id_shop,price,in_stock) values(@idGood,@idShop,@price,@in_stock) RETURNING id";
             var insertCmd = new NpgsqlCommand(insertQuery, con);
 
             insertCmd.Parameters.AddWithValue("@idShop", shopgood.ShopId);
@@ -163,7 +164,7 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
         ShopGood shopgood = FromDto(entity);
         var con = DbConnection.GetConnection();
         con.Open();
-        const string insertQuery = $"DELETE FROM {TableName} WHERE id = @id";
+        const string insertQuery = $"DELETE FROM \"{TableName}\" WHERE id = @id";
         var insertCmd = new NpgsqlCommand(insertQuery, con);
         insertCmd.Parameters.AddWithValue("@id", shopgood.Id);
         int num = insertCmd.ExecuteNonQuery();
@@ -172,7 +173,7 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
         Console.WriteLine($"Удалено {num} товаров");
     }
 
-    public ShopGood FromDto(ShopGoodDto dto)
+    public static ShopGood FromDto(ShopGoodDto dto)
     {
         return new ShopGood
         {
@@ -184,7 +185,7 @@ public class ShopGoodDbDataMapper : IShopGoodDataMapper
         };
     }
 
-    public ShopGoodDto ToDto(ShopGood entity)
+    public static ShopGoodDto ToDto(ShopGood entity)
     {
         return new ShopGoodDto
         {

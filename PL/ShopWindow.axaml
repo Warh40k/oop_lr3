@@ -2,9 +2,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:e="using:BLL.Entities"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="Client.GoodsWindow"
-        Title="GoodsWindow">
+        x:Class="Client.ShopWindow"
+        Title="ShopWindow">
     <Grid RowDefinitions="1*,12*">
             <Label HorizontalAlignment="Center">Супермагазин. Продукты. Напитки.</Label>
             <Grid Grid.Row="1" ColumnDefinitions="10*, 5*">
@@ -14,8 +15,22 @@
                 </DataGrid>
                 <StackPanel Grid.Column="1" Margin="10" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Label>Название товара</Label>
-                    <TextBox Name="goodNameBox"></TextBox>
+                    <ComboBox Name="goodNameComboBox" SelectedIndex="0">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="e:Good">
+                                <TextBlock Text="{Binding Name}"></TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                     <Button Click="CreateGood" Margin="10">Создать товар</Button>
+                    
+                    <Label>Количество товаров</Label>
+                    <TextBox Name="goodCountBox"></TextBox>
+                    <Button Click="AddGoods" Margin="10">Добавить товаров</Button>
+                    
+                    <Label>Бюджет</Label>
+                    <TextBox Name="priceBox"></TextBox>
+                    <Button Click="FindForNRubles" Margin="10">Что можно купить за n руб</Button>
                 </StackPanel>
             </Grid>
         </Grid>
