@@ -1,10 +1,8 @@
-using System.Data.Common;
 using DAL.Entities.Shop;
 using DAL.Interfaces;
 using DTOs;
-using Npgsql;
 
-namespace DAL.Mappers.Csv;
+namespace DAL.Mappers.Json;
 
 public class ShopJsonDataMapper : IShopDataMapper
 {
@@ -26,21 +24,45 @@ public class ShopJsonDataMapper : IShopDataMapper
 
     public int? Save(ShopDto entity)
     {
-        throw new NotImplementedException();
+        var shop = FromDto(entity);
+        Shop existedGood = null;
+        int? lastId = 1;
+        if (JsonData.Goods.Count != 0)
+        {
+            var last = JsonData.Goods.Last();
+            lastId = last.Id;
+        }
+        shop.Id = lastId;
+        JsonData.Shops.Add(shop);
+        JsonData.Save();
+        return lastId;
     }
 
     public void Delete(ShopDto entity)
     {
-        throw new NotImplementedException();
+        var good = FromDto(entity);
+        var search = JsonData.Goods.FirstOrDefault(obj => obj.Id == entity.Id);
+        if (search != null)
+            JsonData.Goods.Remove(search);
     }
 
-    public Shop FromDto(ShopDto dto)
+    public static Shop FromDto(ShopDto dto)
     {
-        throw new NotImplementedException();
+        return new Shop
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Address = dto.Address
+        };
     }
 
-    public ShopDto ToDto(Shop entity)
+    public static ShopDto ToDto(Shop entity)
     {
-        throw new NotImplementedException();
+        return new ShopDto
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Address = entity.Address
+        };
     }
 }

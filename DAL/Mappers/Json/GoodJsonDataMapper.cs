@@ -1,11 +1,8 @@
-using System.Data.Common;
 using DAL.Entities.Good;
-using DAL.Entities.Shop;
 using DAL.Interfaces;
 using DTOs;
-using Npgsql;
 
-namespace DAL.Mappers.Csv;
+namespace DAL.Mappers.Json;
 
 public class GoodJsonDataMapper : IGoodDataMapper
 {
@@ -52,7 +49,16 @@ public class GoodJsonDataMapper : IGoodDataMapper
 
     public IEnumerable<GoodDto> GetGoodsFromShop(int? shopId, string where = "", int? value = -1)
     {
-        throw new NotImplementedException();
+        return from shopGood in JsonData.ShopGoods
+            join good in JsonData.Goods on shopGood.GoodId equals good.Id
+            where shopGood.ShopId == shopId
+            select new GoodDto
+            {
+                Id = good.Id,
+                Name = good.Name,
+                Price = shopGood.Price,
+                Quantity = shopGood.InStock
+            };
     }
 
     public void AddGoodToShop(int? shopId, GoodDto goodDto)

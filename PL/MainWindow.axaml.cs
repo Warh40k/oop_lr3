@@ -5,8 +5,8 @@ using BLL.Entities;
 using BLL.Repositories;
 using DAL;
 using DAL.Interfaces;
-using DAL.Mappers.Csv;
 using DAL.Mappers.Database;
+using DAL.Mappers.Json;
 
 namespace Client;
 
@@ -21,7 +21,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        _shopMapper = new ShopDbDataMapper();
+        _shopMapper = new ShopJsonDataMapper();
         _goodMapper = new GoodJsonDataMapper();
         JsonData.Load();
         _shopRepo = new ShopRepository(_shopMapper);
@@ -52,7 +52,7 @@ public partial class MainWindow : Window
 
     private void CreateShop(object? sender, RoutedEventArgs e)
     {
-        if (ShopNameBox.Text.Trim() != "" && ShopAddressBox.Text.Trim() != "")
+        if (!string.IsNullOrEmpty(ShopNameBox.Text) && !string.IsNullOrEmpty(ShopAddressBox.Text))
         {
             var shop = new Shop()
             {
