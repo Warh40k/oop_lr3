@@ -1,4 +1,5 @@
 using DAL.Entities.Good;
+using DAL.Entities.ShopGoods;
 using DAL.Interfaces;
 using DTOs;
 
@@ -42,7 +43,7 @@ public class GoodJsonDataMapper : IGoodDataMapper
     public void Delete(GoodDto entity)
     {
         var good = FromDto(entity);
-        var search = JsonData.Goods.FirstOrDefault(obj => obj.Id == entity.Id);
+        var search = JsonData.Goods.FirstOrDefault(obj => obj.Id == good.Id);
         if (search != null)
             JsonData.Goods.Remove(search);
     }
@@ -63,7 +64,37 @@ public class GoodJsonDataMapper : IGoodDataMapper
 
     public void AddGoodToShop(int? shopId, GoodDto goodDto)
     {
-        throw new NotImplementedException();
+        var good = FromDto(goodDto);
+        var existedShopGood = from shopGood in JsonData.ShopGoods
+            where shopGood.ShopId == shopId && shopGood.GoodId == good.Id
+            select new ShopGood
+            {
+                Id = shopGood.Id,
+                GoodId = shopGood.GoodId,
+                ShopId = shopGood.ShopId,
+                Price = shopGood.Price,
+                InStock = shopGood.InStock
+            };
+        if (existedShopGood.Count() == 0)
+        {
+            var shopGood = new ShopGood
+            {
+                GoodId = good.Id,
+                ShopId = shopId,
+                Price = good.Price,
+                InStock = good.Quantity
+            };
+            
+            int? lastId = 1;
+            if (JsonData.ShopGoods.Count != 0)
+            {
+                var last = JsonData.ShopGoods.Last();
+                lastId = last.Id;
+            }
+            shopGood.Id = lastId;
+            JsonData.ShopGoods.Add(shopGood);
+            JsonData.Save();
+        }
     }
 
     public void DeleteGoodFromShop(int shopId, GoodDto goodDto)
