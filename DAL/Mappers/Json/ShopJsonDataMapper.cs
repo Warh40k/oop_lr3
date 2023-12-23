@@ -6,11 +6,17 @@ using Npgsql;
 
 namespace DAL.Mappers.Csv;
 
-public class ShopCsvDataMapper : IShopDataMapper
+public class ShopJsonDataMapper : IShopDataMapper
 {
     public IEnumerable<ShopDto> GetAll(string statement="")
     {
-        throw new NotImplementedException();
+        var shops = new List<ShopDto>();
+        foreach (var good in JsonData.Shops)
+        {
+            shops.Add(ToDto(good));
+        }
+
+        return shops;
     }
 
     public ShopDto GetById(int id)

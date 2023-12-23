@@ -3,7 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using BLL.Entities;
 using BLL.Repositories;
+using DAL;
 using DAL.Interfaces;
+using DAL.Mappers.Csv;
 using DAL.Mappers.Database;
 
 namespace Client;
@@ -20,7 +22,8 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         _shopMapper = new ShopDbDataMapper();
-        _goodMapper = new GoodDbDataMapper();
+        _goodMapper = new GoodJsonDataMapper();
+        JsonData.Load();
         _shopRepo = new ShopRepository(_shopMapper);
         _goodRepo = new GoodRepository(_goodMapper);
         Shops = new ObservableCollection<Shop>(_shopRepo.GetAll());

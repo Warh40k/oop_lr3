@@ -7,11 +7,18 @@ using Npgsql;
 
 namespace DAL.Mappers.Csv;
 
-public class GoodCsvDataMapper : IGoodDataMapper
+public class GoodJsonDataMapper : IGoodDataMapper
 {
     public IEnumerable<GoodDto> GetAll(string statement="")
     {
-        throw new NotImplementedException();
+        var goods = new List<GoodDto>();
+        
+        foreach (var good in JsonData.Goods)
+        {
+            goods.Add(ToDto(good));
+        }
+
+        return goods;
     }
 
     public GoodDto GetById(int id)
@@ -21,12 +28,26 @@ public class GoodCsvDataMapper : IGoodDataMapper
 
     public int? Save(GoodDto entity)
     {
-        throw new NotImplementedException();
+        var good = FromDto(entity);
+        Good existedGood = null;
+        int? lastId = 1;
+        if (JsonData.Goods.Count != 0)
+        {
+            var last = JsonData.Goods.Last();
+            lastId = last.Id;
+        }
+        good.Id = lastId;
+        JsonData.Goods.Add(good);
+        JsonData.Save();
+        return lastId;
     }
 
     public void Delete(GoodDto entity)
     {
-        throw new NotImplementedException();
+        var good = FromDto(entity);
+        var search = JsonData.Goods.FirstOrDefault(obj => obj.Id == entity.Id);
+        if (search != null)
+            JsonData.Goods.Remove(search);
     }
 
     public IEnumerable<GoodDto> GetGoodsFromShop(int? shopId, string where = "", int? value = -1)
@@ -61,11 +82,25 @@ public class GoodCsvDataMapper : IGoodDataMapper
 
     public Good FromDto(GoodDto dto)
     {
-        throw new NotImplementedException();
+        return new Good
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Quantity = dto.Quantity,
+            Price = dto.Price,
+            AffordCount = dto.AffordCount
+        };
     }
 
     public GoodDto ToDto(Good entity)
     {
-        throw new NotImplementedException();
+        return new GoodDto
+        {
+            Id = entity.Id,
+            Name = entity.Name,
+            Quantity = entity.Quantity,
+            Price = entity.Price,
+            AffordCount = entity.AffordCount
+        };
     }
 }
