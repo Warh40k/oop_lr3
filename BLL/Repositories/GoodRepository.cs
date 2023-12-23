@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using BLL.Entities;
 using BLL.Interfaces;
 using DAL.Interfaces;
@@ -42,7 +43,19 @@ public class GoodRepository : IRepository<Good>
     public int FindCheapestShop(Good good)
     {
         return _mapper.FindCheapestShop(ToDto(good));
-    } 
+    }
+
+    public IEnumerable<Good> CountGoodCountForBudget(int? shopId, int budget)
+    {
+        var dtos = _mapper.GetGoodsForBudget(shopId, budget);
+        var goods = new ObservableCollection<Good>();
+        foreach (var dto in dtos)
+        {
+            goods.Add(FromDto(dto));
+        }
+
+        return goods;
+    }
     
     public Good GetById(int id)
     {
@@ -56,7 +69,8 @@ public class GoodRepository : IRepository<Good>
             Id = dto.Id,
             Name = dto.Name,
             Price = dto.Price,
-            Quantity = dto.Quantity
+            Quantity = dto.Quantity,
+            AffordCount = dto.AffordCount
         };
     }
 
@@ -67,7 +81,8 @@ public class GoodRepository : IRepository<Good>
             Id = entity.Id,
             Name = entity.Name,
             Price = entity.Price,
-            Quantity = entity.Quantity
+            Quantity = entity.Quantity,
+            AffordCount = entity.AffordCount
         };
     }
 

@@ -1,6 +1,4 @@
 using DAL.Entities.Good;
-using DAL.Entities.Shop;
-using DAL.Entities.ShopGoods;
 using DAL.Interfaces;
 using DTOs;
 using Npgsql;
@@ -51,6 +49,7 @@ public class GoodDbDataMapper : IGoodDataMapper
                        INNER JOIN "goods-shops" as gs ON gs.id_good = {TableName}.good_id
                        WHERE id_shop = @id_shop
                        """;
+
         var cmd = new NpgsqlCommand(query, con);
         cmd.Parameters.AddWithValue("@id_shop", shopId);
         con.Open();
@@ -186,7 +185,10 @@ public class GoodDbDataMapper : IGoodDataMapper
         return new Good
         {
             Id = dto.Id,
-            Name = dto.Name
+            Name = dto.Name,
+            Quantity = dto.Quantity,
+            Price = dto.Price,
+            AffordCount = dto.AffordCount
         };
     }
 
@@ -197,7 +199,8 @@ public class GoodDbDataMapper : IGoodDataMapper
             Id = entity.Id,
             Name = entity.Name,
             Quantity = entity.Quantity,
-            Price = entity.Price
+            Price = entity.Price,
+            AffordCount = entity.AffordCount
         };
     }
     
@@ -212,7 +215,7 @@ public class GoodDbDataMapper : IGoodDataMapper
                                     ORDER BY price ASC
                                     """;
         var selectCmd = new NpgsqlCommand(selectQuery, con);
-        selectCmd.Parameters.AddWithValue("@id", goodDto.Id);
+        selectCmd.Parameters.AddWithValue("@id", good.Id);
         con.Open();
         var reader = selectCmd.ExecuteReader();
         if (reader.HasRows)
@@ -223,6 +226,17 @@ public class GoodDbDataMapper : IGoodDataMapper
         con.Close();
 
         return -1;
+    }
+
+    public IEnumerable<GoodDto> GetGoodsForBudget(int? shopId, int budget)
+    {
+        var goods = GetGoodsFromShop(shopId);
+        foreach (var good in goods)
+        {
+            good.AffordCount = budget / (int)good.Price;
+        }
+
+        return goods;
     }
 
     public int? Save(GoodDto entity)

@@ -54,7 +54,7 @@ public class GoodCsvDataMapper : IGoodDataMapper
         throw new NotImplementedException();
     }
 
-    public Shop FindCheapestGood(GoodDto goodDto)
+    public IEnumerable<GoodDto> GetGoodsForBudget(int? shopId, int budget)
     {
         throw new NotImplementedException();
     }

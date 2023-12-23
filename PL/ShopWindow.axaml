@@ -31,7 +31,7 @@
                     <Button Click="AddGoods" Margin="10">Обновить позицию</Button>
                     
                     <Label>Бюджет</Label>
-                    <TextBox Name="priceBox"></TextBox>
+                    <TextBox Name="budgetBox"></TextBox>
                     <Button Click="FindForNRubles" Margin="10">Что можно купить за n руб</Button>
                 </StackPanel>
             </Grid>

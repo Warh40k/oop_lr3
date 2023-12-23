@@ -55,6 +55,12 @@ public partial class ShopWindow : Window
 
     private void FindForNRubles(object? sender, RoutedEventArgs e)
     {
-        throw new System.NotImplementedException();
+        int budget = -1;
+        Int32.TryParse(budgetBox.Text, out budget);
+        if (budget != 0)
+        {
+            Goods = new ObservableCollection<Good>(_goodRepo.CountGoodCountForBudget(shopContext.Id, budget));
+            GoodsGrid.ItemsSource = Goods;
+        }
     }
 }
