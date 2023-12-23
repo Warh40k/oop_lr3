@@ -46,25 +46,6 @@ public class ShopDbDataMapper : IShopDataMapper
         throw new NotImplementedException();
     }
 
-    public void Update(ShopDto entity)
-    {
-        var shop = FromDto(entity);
-        var con = DbConnection.GetConnection();
-        con.Open();
-        int num = 0;
-        const string insertQuery = $"UPDATE {TableName} SET good_name = @name WHERE good_id = @id";
-        var insertCmd = new NpgsqlCommand(insertQuery, con);
-        
-        insertCmd.Parameters.AddWithValue("@name", shop.Name);
-        insertCmd.Parameters.AddWithValue("@id", shop.Id);
-
-        num = insertCmd.ExecuteNonQuery();
-        
-        con.Close();
-        
-        Console.WriteLine($"Обновлено {num} товаров");
-    }
-
     public ShopDto? GetById(int id)
     {
         Shop shop = new Shop();

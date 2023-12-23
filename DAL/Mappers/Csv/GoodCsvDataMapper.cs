@@ -24,17 +24,12 @@ public class GoodCsvDataMapper : IGoodDataMapper
         throw new NotImplementedException();
     }
 
-    public void Update(GoodDto dto)
-    {
-        throw new NotImplementedException();
-    }
-
     public void Delete(GoodDto entity)
     {
         throw new NotImplementedException();
     }
 
-    public IEnumerable<GoodDto> GetGoodsFromShop(int? shopId)
+    public IEnumerable<GoodDto> GetGoodsFromShop(int? shopId, string where = "", int? value = -1)
     {
         throw new NotImplementedException();
     }
@@ -55,6 +50,11 @@ public class GoodCsvDataMapper : IGoodDataMapper
     }
 
     public IEnumerable<GoodDto> GetGoodsForBudget(int? shopId, int budget)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool BuyGoods(int? shopId, GoodDto good, int quantity)
     {
         throw new NotImplementedException();
     }

@@ -7,7 +7,6 @@ public interface IDataMapper<T>
     IEnumerable<T> GetAll(string statement = "");
     T? GetById(int id);
     int? Save(T dto);
-    void Update(T dto);
     void Delete(T dto);
     
 

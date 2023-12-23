@@ -2,11 +2,9 @@ using System;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml.Templates;
 using BLL.Entities;
 using BLL.Repositories;
 using DAL.Interfaces;
-using DAL.Mappers.Database;
 
 namespace Client;
 
@@ -61,6 +59,24 @@ public partial class ShopWindow : Window
         {
             Goods = new ObservableCollection<Good>(_goodRepo.CountGoodCountForBudget(shopContext.Id, budget));
             GoodsGrid.ItemsSource = Goods;
+        }
+    }
+
+    private void BuyGoods(object? sender, RoutedEventArgs e)
+    {
+        var good = GoodsGrid.SelectedItem as Good;
+        int quantity;
+        Int32.TryParse(quantityBox.Text, out quantity);
+        if (good != null && quantity != 0)
+        {
+            bool result = _goodRepo.BuyGoods(shopContext.Id, good, quantity);
+            if (result == false)
+            {
+                var mb = new MessageBox("Нет наличия", "Указанного количества нет на складе");
+                mb.ShowDialog(this);
+            } 
+            else
+                Refresh();
         }
     }
 }

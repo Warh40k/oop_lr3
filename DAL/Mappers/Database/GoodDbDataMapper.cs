@@ -39,7 +39,7 @@ public class GoodDbDataMapper : IGoodDataMapper
         return goods;
     }
 
-    public IEnumerable<GoodDto> GetGoodsFromShop(int? shopId)
+    public IEnumerable<GoodDto> GetGoodsFromShop(int? shopId, string where = "", int? value = -1)
     {
         var con = DbConnection.GetConnection();
         List<GoodDto> goods = new List<GoodDto>();
@@ -49,9 +49,12 @@ public class GoodDbDataMapper : IGoodDataMapper
                        INNER JOIN "goods-shops" as gs ON gs.id_good = {TableName}.good_id
                        WHERE id_shop = @id_shop
                        """;
-
+        if (where != "" && value != -1)
+            query += $" AND {where} @param";
         var cmd = new NpgsqlCommand(query, con);
         cmd.Parameters.AddWithValue("@id_shop", shopId);
+        if (where != "" && value != -1)
+            cmd.Parameters.AddWithValue("@param", value);
         con.Open();
         var reader = cmd.ExecuteReader();
 
@@ -105,8 +108,6 @@ public class GoodDbDataMapper : IGoodDataMapper
         shopGoodMapper.Delete(shopGoodDto);
     }
 
-
-
     public GoodDto? GetById(int id)
     {
         Good good = new Good();
@@ -132,29 +133,6 @@ public class GoodDbDataMapper : IGoodDataMapper
         }
         con.Close();
         return ToDto(good);
-    }
-
-    public void Update(GoodDto entity)
-    {
-        var good = FromDto(entity);
-        var con = DbConnection.GetConnection();
-        con.Open();
-        var isExist = CheckRowExist(con, good);
-        int num = 0;
-        if (isExist == null)
-        {
-            const string insertQuery = $"UPDATE {TableName} SET good_name = @name WHERE good_id = @id";
-            var insertCmd = new NpgsqlCommand(insertQuery, con);
-            
-            insertCmd.Parameters.AddWithValue("@name", good.Name);
-            insertCmd.Parameters.AddWithValue("@id", good.Id);
-    
-            num = insertCmd.ExecuteNonQuery();
-        }
-        
-        con.Close();
-        
-        Console.WriteLine($"Обновлено {num} товаров");
     }
 
     private static int? CheckRowExist(NpgsqlConnection con, Good good)
@@ -237,6 +215,21 @@ public class GoodDbDataMapper : IGoodDataMapper
         }
 
         return goods;
+    }
+
+    public bool BuyGoods(int? shopId, GoodDto good, int quantity)
+    {
+        var goods = GetGoodsFromShop(shopId, $"gs.id_good = ", good.Id);
+        GoodDto goodDto = null;
+        var enumerat = goods.GetEnumerator();
+        if (enumerat.MoveNext())
+            goodDto = enumerat.Current;
+        if (goodDto == null || goodDto.Quantity < quantity)
+            return false;
+        goodDto.Quantity -= quantity;
+        AddGoodToShop(shopId, goodDto);
+
+        return true;
     }
 
     public int? Save(GoodDto entity)

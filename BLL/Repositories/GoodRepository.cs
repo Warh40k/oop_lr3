@@ -3,6 +3,7 @@ using BLL.Entities;
 using BLL.Interfaces;
 using DAL.Interfaces;
 using DTOs;
+using Npgsql.Replication.PgOutput.Messages;
 
 namespace BLL.Repositories;
 
@@ -60,6 +61,13 @@ public class GoodRepository : IRepository<Good>
     public Good GetById(int id)
     {
         return FromDto(_mapper.GetById(id));
+    }
+
+    public bool BuyGoods(int? shopId, Good goodId, int quantity)
+    {
+        if (_mapper.BuyGoods(shopId, ToDto(goodId), quantity))
+            return true;
+        return false;
     }
 
     private Good FromDto(GoodDto? dto)

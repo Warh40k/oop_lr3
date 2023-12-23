@@ -33,6 +33,10 @@
                     <Label>Бюджет</Label>
                     <TextBox Name="budgetBox"></TextBox>
                     <Button Click="FindForNRubles" Margin="10">Что можно купить за n руб</Button>
+                    
+                    <Label>Количество</Label>
+                    <TextBox Name="quantityBox"></TextBox>
+                    <Button Click="BuyGoods" Margin="10">Купить выбранный товар</Button>
                 </StackPanel>
             </Grid>
         </Grid>
