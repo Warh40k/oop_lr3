@@ -51,7 +51,7 @@ public class GoodJsonDataMapper : IGoodDataMapper
 
     public IEnumerable<GoodDto> GetGoodsFromShop(int? shopId, string where = "", int? value = -1)
     {
-        return from shopGood in JsonData.ShopGoods
+        var result = from shopGood in JsonData.ShopGoods
             join good in JsonData.Goods on shopGood.GoodId equals good.Id
             where shopGood.ShopId == shopId
             select new GoodDto
@@ -61,6 +61,7 @@ public class GoodJsonDataMapper : IGoodDataMapper
                 Price = shopGood.Price,
                 Quantity = shopGood.InStock
             };
+        return result.ToList();
     }
 
     public void AddGoodToShop(int? shopId, GoodDto goodDto)
@@ -118,7 +119,13 @@ public class GoodJsonDataMapper : IGoodDataMapper
 
     public IEnumerable<GoodDto> GetGoodsForBudget(int? shopId, int budget)
     {
-        throw new NotImplementedException();
+        var goods = GetGoodsFromShop(shopId);
+        foreach (var good in goods)
+        {
+            good.AffordCount = budget / (int)good.Price;
+        }
+
+        return goods;
     }
 
     public bool BuyGoods(int? shopId, GoodDto good, int quantity)

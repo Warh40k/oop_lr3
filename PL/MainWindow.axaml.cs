@@ -5,7 +5,6 @@ using BLL.Entities;
 using BLL.Repositories;
 using DAL;
 using DAL.Interfaces;
-using DAL.Mappers.Database;
 using DAL.Mappers.Json;
 
 namespace Client;
@@ -31,10 +30,11 @@ public partial class MainWindow : Window
         GoodsComboBox.ItemsSource = _goodRepo.GetAll();
     }
     
-    private void Refresh()
+    private void  Refresh()
     {
         Shops = new ObservableCollection<Shop>(_shopRepo.GetAll());
         ShopsGrid.ItemsSource = Shops;
+        GoodsComboBox.ItemsSource = _goodRepo.GetAll();
     }
 
     private void OpenShop(object? sender, RoutedEventArgs e)
@@ -48,6 +48,7 @@ public partial class MainWindow : Window
     {
         var goodWindow = new GoodsWindow(_goodMapper);
         goodWindow.ShowDialog(this);
+        Refresh();
     }
 
     private void CreateShop(object? sender, RoutedEventArgs e)
