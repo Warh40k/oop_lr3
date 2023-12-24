@@ -10,5 +10,5 @@ public interface IGoodDataMapper : IDataMapper<GoodDto>
     void DeleteGoodFromShop(int shopId, GoodDto goodDto);
     public int FindCheapestShop(GoodDto goodDto);
     IEnumerable<GoodDto> GetGoodsForBudget(int? shopId, int budget);
-    public bool BuyGoods(int? shopId, GoodDto good, int quantity);
+    public bool BuyGoods(int? shopId, GoodDto goodDto, int quantity);
 }

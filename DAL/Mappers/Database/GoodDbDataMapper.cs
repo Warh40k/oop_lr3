@@ -217,9 +217,9 @@ public class GoodDbDataMapper : IGoodDataMapper
         return goods;
     }
 
-    public bool BuyGoods(int? shopId, GoodDto good, int quantity)
+    public bool BuyGoods(int? shopId, GoodDto goodDto1, int quantity)
     {
-        var goods = GetGoodsFromShop(shopId, $"gs.id_good = ", good.Id);
+        var goods = GetGoodsFromShop(shopId, $"gs.id_good = ", goodDto1.Id);
         GoodDto goodDto = null;
         var enumerat = goods.GetEnumerator();
         if (enumerat.MoveNext())

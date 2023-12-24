@@ -128,9 +128,21 @@ public class GoodJsonDataMapper : IGoodDataMapper
         return goods;
     }
 
-    public bool BuyGoods(int? shopId, GoodDto good, int quantity)
+    public bool BuyGoods(int? shopId, GoodDto goodDto, int quantity)
     {
-        throw new NotImplementedException();
+        var toBuy = (from shopGood in JsonData.ShopGoods
+            join good in JsonData.Goods on shopGood.GoodId equals good.Id
+            where good.Id == goodDto.Id
+            select new Good
+            {
+                Id = good.Id,
+            }).First();
+        var toUpdate = JsonData.ShopGoods.FirstOrDefault(shopGood => shopGood.GoodId == toBuy.Id);
+        if (toUpdate.InStock < quantity)
+            return false;
+        toUpdate.InStock -= quantity;
+        JsonData.Save();
+        return true;
     }
 
     public Good FromDto(GoodDto dto)
