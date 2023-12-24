@@ -1,4 +1,5 @@
 using DAL.Entities.Good;
+using DAL.Entities.Shop;
 using DAL.Entities.ShopGoods;
 using DAL.Interfaces;
 using DTOs;
@@ -28,16 +29,16 @@ public class GoodJsonDataMapper : IGoodDataMapper
     {
         var good = FromDto(entity);
         Good existedGood = null;
-        int? lastId = 1;
+        int? lastId = 0;
         if (JsonData.Goods.Count != 0)
         {
             var last = JsonData.Goods.Last();
             lastId = last.Id;
         }
-        good.Id = lastId;
+        good.Id = lastId + 1;
         JsonData.Goods.Add(good);
         JsonData.Save();
-        return lastId;
+        return good.Id;
     }
 
     public void Delete(GoodDto entity)
@@ -65,17 +66,8 @@ public class GoodJsonDataMapper : IGoodDataMapper
     public void AddGoodToShop(int? shopId, GoodDto goodDto)
     {
         var good = FromDto(goodDto);
-        var existedShopGood = from shopGood in JsonData.ShopGoods
-            where shopGood.ShopId == shopId && shopGood.GoodId == good.Id
-            select new ShopGood
-            {
-                Id = shopGood.Id,
-                GoodId = shopGood.GoodId,
-                ShopId = shopGood.ShopId,
-                Price = shopGood.Price,
-                InStock = shopGood.InStock
-            };
-        if (existedShopGood.Count() == 0)
+        var extShopGood = JsonData.ShopGoods.FirstOrDefault(obj => obj.GoodId == good.Id && obj.ShopId == shopId, null);
+        if (extShopGood == null)
         {
             var shopGood = new ShopGood
             {
@@ -85,14 +77,20 @@ public class GoodJsonDataMapper : IGoodDataMapper
                 InStock = good.Quantity
             };
             
-            int? lastId = 1;
+            int? lastId = 0;
             if (JsonData.ShopGoods.Count != 0)
             {
                 var last = JsonData.ShopGoods.Last();
                 lastId = last.Id;
             }
-            shopGood.Id = lastId;
+            shopGood.Id = lastId + 1;
             JsonData.ShopGoods.Add(shopGood);
+            JsonData.Save();
+        }
+        else
+        {
+            extShopGood.Price = good.Price;
+            extShopGood.InStock = good.Quantity;
             JsonData.Save();
         }
     }
@@ -104,7 +102,18 @@ public class GoodJsonDataMapper : IGoodDataMapper
 
     public int FindCheapestShop(GoodDto goodDto)
     {
-        throw new NotImplementedException();
+        var good = FromDto(goodDto);
+        var cheapest = from sg in JsonData.ShopGoods
+            join s in JsonData.Shops on sg.ShopId equals s.Id
+            where sg.GoodId == good.Id
+            orderby sg.Price
+            select new Shop
+            {
+                Id = s.Id,
+                Name = s.Name,
+                Address = s.Address
+            };
+        return (int)cheapest.First().Id;
     }
 
     public IEnumerable<GoodDto> GetGoodsForBudget(int? shopId, int budget)

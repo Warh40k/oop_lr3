@@ -26,16 +26,16 @@ public class ShopJsonDataMapper : IShopDataMapper
     {
         var shop = FromDto(entity);
         Shop existedGood = null;
-        int? lastId = 1;
+        int? lastId = 0;
         if (JsonData.Goods.Count != 0)
         {
-            var last = JsonData.Goods.Last();
+            var last = JsonData.Shops.Last();
             lastId = last.Id;
         }
-        shop.Id = lastId;
+        shop.Id = lastId + 1;
         JsonData.Shops.Add(shop);
         JsonData.Save();
-        return lastId;
+        return shop.Id;
     }
 
     public void Delete(ShopDto entity)
