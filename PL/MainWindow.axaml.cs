@@ -1,10 +1,12 @@
 using System.Collections.ObjectModel;
+using System.IO;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using BLL.Entities;
 using BLL.Repositories;
 using DAL;
 using DAL.Interfaces;
+using DAL.Mappers.Database;
 using DAL.Mappers.Json;
 
 namespace Client;
@@ -20,9 +22,20 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        _shopMapper = new ShopJsonDataMapper();
-        _goodMapper = new GoodJsonDataMapper();
-        JsonData.Load();
+        string dataSource = "db";
+        if (File.Exists(".property"))
+            dataSource = File.ReadAllText(".property");
+        if (dataSource.Trim('\n') == "db")
+        {
+            _shopMapper = new ShopDbDataMapper();
+            _goodMapper = new GoodDbDataMapper();
+        } else if (dataSource.Trim('\n') == "json")
+        {
+            _shopMapper = new ShopJsonDataMapper();
+            _goodMapper = new GoodJsonDataMapper();
+            JsonData.Load();
+        }
+        
         _shopRepo = new ShopRepository(_shopMapper);
         _goodRepo = new GoodRepository(_goodMapper);
         Shops = new ObservableCollection<Shop>(_shopRepo.GetAll());
